@@ -4,12 +4,13 @@ using System.Threading.Tasks;
 using StackExchange.Redis;
 using Newtonsoft.Json;
 using System.Linq;
+using System.Configuration;
 
 namespace RedisAutocomplete
 {
-    public class RedisAutocompleter<T> : IRedisAutocompleter<T>
+    internal class RedisAutocompleteManager<T> : IRedisAutocompleteManager<T>
     {
-        private static ConnectionMultiplexer _redis;
+        //private ConnectionMultiplexer _redis;
         private IDatabase _db;
 
         private string _setName;
@@ -22,19 +23,28 @@ namespace RedisAutocomplete
 
         #region ctor
 
-        public RedisAutocompleter()
+        public RedisAutocompleteManager():this("DefaultRedisAutocomplete")
         {
-            if (_redis == null)
-            {
-                _redis = ConnectionMultiplexer.Connect("localhost:6379");
-            }
-            _db = _redis.GetDatabase();
-            RedisSetName = "MainAutoComplete";
+            
         }
 
-        public RedisAutocompleter(string redisSetName) : this()
+        public RedisAutocompleteManager(string redisConnectionString) 
         {
-            RedisSetName = redisSetName;
+            RedisSetName = "RedisAutoCompleteSet";
+
+            try
+            {
+                
+                   var _redis = ConnectionMultiplexer.Connect(ConfigurationManager.ConnectionStrings[redisConnectionString].ConnectionString );
+                
+                _db = _redis.GetDatabase();
+            }
+            catch (Exception ex)
+            {
+
+                throw new Exception("Failed to connect to Redis Database.Please check your connection string. Default ConnectionString is 'DefaultRedisAutocomplete'", ex);
+            }
+            
         }
 
         #endregion ctor
@@ -43,7 +53,7 @@ namespace RedisAutocomplete
 
         #region Set Methods
 
-        public void SetValues(IEnumerable<string> input)
+        public void SetValues(List<string> input)
         {
             foreach (var item in input)
             {
@@ -51,7 +61,7 @@ namespace RedisAutocomplete
             }
         }
 
-        public async Task SetValuesAsync(IEnumerable<string> input)
+        public async Task SetValuesAsync(List<string> input)
         {
             foreach (var item in input)
             {
@@ -63,21 +73,21 @@ namespace RedisAutocomplete
 
         #region Get Methods
 
-        public IEnumerable<string> GetValues(string key)
+        public List<string> GetValues(string key)
         {
             var getTask = GetValuesAsync(key);
             getTask.Wait();
             return getTask.Result;
         }
 
-        public IEnumerable<string> GetValues(string key, int limit)
+        public List<string> GetValues(string key, int limit)
         {
             var getTask = GetValuesAsync(key, limit);
             getTask.Wait();
             return getTask.Result;
         }
 
-        public async Task<IEnumerable<string>> GetValuesAsync(string prefix)
+        public async Task<List<string>> GetValuesAsync(string prefix)
         {
             prefix = prefix.ToLower();
 
@@ -96,7 +106,7 @@ namespace RedisAutocomplete
                 var autores = item.Split(new string[] { "*#*" }, StringSplitOptions.RemoveEmptyEntries);
                 if (autores != null && autores.Count() == 2)
                 {
-                    var criteria = JsonConvert.DeserializeObject<T>(autores[1]);
+                    //var criteria = JsonConvert.DeserializeObject<T>(autores[1]);
                     autoCompleteResult.Add(autores[0]);
                     //autoCompleteResult.Add(new AutoCompleteResult()
                     //{
@@ -109,11 +119,11 @@ namespace RedisAutocomplete
             return autoCompleteResult;
         }
 
-        public async Task<IEnumerable<string>> GetValuesAsync(string key, int limit)
+        public async Task<List<string>> GetValuesAsync(string key, int limit)
         {
             var result = await GetValuesAsync(key);
 
-            return result.Take(limit);
+            return result.Take(limit).ToList();
         }
 
         #endregion Get Methods
