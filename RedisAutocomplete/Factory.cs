@@ -13,9 +13,9 @@ namespace RedisAutocomplete
             return new RedisAutocompleteManager<T>();
         }
 
-        public static IRedisAutocompleteManager<T> getAutocompleter<T>(string setName)
+        public static IRedisAutocompleteManager<T> getAutocompleter<T>(string redisConnectionString)
         {
-            return new RedisAutocompleteManager<T>(setName);
+            return new RedisAutocompleteManager<T>(redisConnectionString);
         }
     }
 }

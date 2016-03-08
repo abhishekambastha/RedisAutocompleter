@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RedisAutocomplete", "RedisA
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RedisAutocomplete.Tests", "RedisAutocomplete.Tests\RedisAutocomplete.Tests.csproj", "{EC79515B-ED39-4546-9A28-E8647B1A93C6}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{8C95CBEA-2DE4-488C-B6E6-29B3BE692988}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
