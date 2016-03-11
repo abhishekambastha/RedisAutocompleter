@@ -18,7 +18,7 @@ namespace RedisAutocomplete.Tests
         [TestMethod]
         public void InsertValuesAndQuery()
         {
-            var autocompleter = new RedisAutoComplete<string>();
+            var autocompleter = new RedisAutoComplete<string>();/*var autocompleter = new RedisAutoComplete<string>("AlternateRedisAutocomplete");*/
             var input = new List<string>();
             input.Add("foo");
             input.Add("foobar");
