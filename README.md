@@ -5,7 +5,8 @@ Implemented by using ZRANK and ZRANGE on sorted sets . Complexity is O(log(N)) .
 ### Installation
 
 	Install-Package RedisAutocomplete  
-	
+  
+  Note:Nuget package supports only Version 4.5.2 of dot net currently. More targets will be added.
 #### Config settings	
      <connectionStrings>  
         <add name="DefaultRedisAutocomplete" connectionString="localhost:6379"/>  
