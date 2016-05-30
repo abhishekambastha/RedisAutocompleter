@@ -23,9 +23,8 @@ namespace RedisAutocomplete
 
         #region ctor
 
-        public RedisAutocompleteManager():this("DefaultRedisAutocomplete")
+        public RedisAutocompleteManager(): this(ConfigurationManager.ConnectionStrings["DefaultRedisAutocomplete"].ConnectionString)
         {
-            
         }
 
         public RedisAutocompleteManager(string redisConnectionString) 
@@ -34,8 +33,7 @@ namespace RedisAutocomplete
 
             try
             {
-                
-                   var _redis = ConnectionMultiplexer.Connect(ConfigurationManager.ConnectionStrings[redisConnectionString].ConnectionString );
+                var _redis = ConnectionMultiplexer.Connect(redisConnectionString);
                 
                 _db = _redis.GetDatabase();
             }

@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
+using System.Configuration;
 
 namespace RedisAutocomplete.Tests
 {
@@ -18,8 +19,8 @@ namespace RedisAutocomplete.Tests
         [TestMethod]
         public void InsertValuesAndQuery()
         {
-            var autocompleter = new RedisAutoComplete<string>();/*var autocompleter = new RedisAutoComplete<string>("AlternateRedisAutocomplete");*/
-            var input = new List<string>();
+            var autocompleter = new RedisAutoComplete<string>(); /*var autocompleter = new RedisAutoComplete<string>(ConfigurationManager.ConnectionStrings["AlternateRedisAutocomplete"].ConnectionString);*/
+			var input = new List<string>();
             input.Add("foo");
             input.Add("foobar");
             input.Add("bar");
@@ -50,7 +51,7 @@ namespace RedisAutocomplete.Tests
         [TestMethod]
         public void InsertValuesAndQueryDiffConnectionString()
         {
-            var autocompleter = new RedisAutoComplete<string>("AlternateRedisAutocomplete");
+            var autocompleter = new RedisAutoComplete<string>(ConfigurationManager.ConnectionStrings["AlternateRedisAutocomplete"].ConnectionString);
             var input = new List<string>();
             input.Add("foo");
             input.Add("foobar");
@@ -68,7 +69,7 @@ namespace RedisAutocomplete.Tests
         {
             try
             {
-                var autocompleter = new RedisAutoComplete<string>("WrongConnectionString");
+                var autocompleter = new RedisAutoComplete<string>(ConfigurationManager.ConnectionStrings["WrongConnectionString"].ConnectionString);
                 Assert.Fail("Expected Exception not thrown");
             }
             catch (Exception ex)
